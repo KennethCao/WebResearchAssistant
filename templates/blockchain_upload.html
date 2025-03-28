@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document - Blockchain Research Assistant{% endblock %}
+
+{% block head %}
+    <!-- Other page-specific header content -->
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Blockchain Research Assistant</h1>
+            <button id="refresh-list" class="btn btn-outline-primary">
+                <i class="fas fa-sync-alt"></i> Refresh List
+            </button>
+        </div>
+
+        <!-- Upload Form Card -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Upload New Document</h5>
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                    <i class="fas fa-exclamation-triangle ms-2"></i>
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                    <i class="fas fa-exclamation-triangle ms-2"></i>
+                </div>
+                {% endif %}
+
+                <form id="upload-form" action="{{ url_for('web.upload') }}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select Document</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".pdf" required>
+                        <div class="form-text">Please upload a PDF document (max 50MB).</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Document List -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Recent Documents</h5>
+                {% if documents %}
+                    <div class="list-group" id="documents-list">
+                    {% for doc in documents %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h6 class="mb-1">{{ doc.filename }}</h6>
+                                <small>{{ doc.upload_time }}</small>
+                            </div>
+                            <!-- Progress Bar -->
+                            <div class="progress mb-2 mt-2" style="height: 5px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" 
+                                     style="width: 0%;" 
+                                     id="progress-{{ doc.file_id }}">
+                                </div>
+                            </div>
+                            <!-- Status Display -->
+                            <div class="text-muted small mb-2" id="status-{{ doc.file_id }}">
+                                {% if doc.status == 'completed' %}
+                                    Analysis Complete
+                                {% else %}
+                                    Waiting for analysis...
+                                {% endif %}
+                            </div>
+                            <div class="btn-group">
+                                <a href="{{ url_for('web.analysis', file_id=doc.file_id) }}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-chart-bar"></i> View Analysis
+                                </a>
+                                {% if doc.status == 'completed' %}
+                                <a href="{{ url_for('web.qa', file_id=doc.file_id) }}" 
+                                   class="btn btn-sm btn-primary">
+                                    <i class="fas fa-comments"></i> Start Q&A
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No documents uploaded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        e.preventDefault();
+        alert('Please select a file');
+        return;
+    }
+    
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+        e.preventDefault();
+        alert('Please upload a PDF file');
+        return;
+    }
+    
+    const maxSize = 52428800; // 50MB in bytes
+    if (file.size > maxSize) {
+        e.preventDefault();
+        alert('File size cannot exceed 50MB');
+        return;
+    }
+
+    const submitButton = this.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+});
+
+// Add refresh and progress update functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all document IDs
+    const docElements = document.querySelectorAll('[id^="progress-"]');
+    const docIds = Array.from(docElements).map(el => el.id.replace('progress-', ''));
+    
+    // Periodically update all documents
+    function updateAllDocuments() {
+        docIds.forEach(updateDocumentStatus);
+    }
+
+    // Update single document status
+    function updateDocumentStatus(fileId) {
+        fetch(`/api/analysis/${fileId}`)
+            .then(response => response.json())
+            .then(data => {
+                const progressBar = document.getElementById(`progress-${fileId}`);
+                const statusText = document.getElementById(`status-${fileId}`);
+                
+                if (progressBar && statusText) {
+                    // Update progress bar
+                    if (data.progress !== undefined) {
+                        progressBar.style.width = `${data.progress}%`;
+                    }
+                    
+                    // Update status text
+                    if (data.current_task) {
+                        statusText.textContent = data.current_task;
+                    }
+                    
+                    // If analysis is complete, refresh page to show Q&A button
+                    if (data.status === 'completed' && !document.querySelector(`a[href="/qa/${fileId}"]`)) {
+                        window.location.reload();
+                    }
+                }
+            })
+            .catch(console.error);
+    }
+
+    // Set update interval
+    setInterval(updateAllDocuments, 2000);
+    
+    // Refresh button click handler
+    document.getElementById('refresh-list').addEventListener('click', function() {
+        this.disabled = true;
+        const icon = this.querySelector('i');
+        icon.classList.add('fa-spin');
+        
+        // Refresh page
+        window.location.reload();
+    });
+});
+</script>
+
+<style>
+.card {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.btn-group .btn {
+    margin-right: 5px;
+}
+
+.progress {
+    background-color: #f8f9fa;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    border-radius: 0 !important;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.fa-spin {
+    animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}

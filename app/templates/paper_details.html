@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Paper Details - {{ paper.filename }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ paper.title or paper.filename }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="paper-info">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong>Upload Time:</strong> {{ paper.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="badge {% if paper.analysis_status == 'completed' %}bg-success
+                                  {% elif paper.analysis_status == 'processing' %}bg-warning
+                                  {% else %}bg-danger{% endif %}">
+                                {{ paper.analysis_status }}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        {% if paper.added_to_kb %}
+                        <p><span class="badge bg-info">Added to Knowledge Base</span></p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if paper.error_message %}
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> {{ paper.error_message }}
+                </div>
+                {% endif %}
+
+                {% if paper.analysis_status == 'completed' %}
+                <div class="analysis-results">
+                    {% if paper.summary %}
+                    <div class="mb-4">
+                        <h4>Abstract</h4>
+                        <div class="summary p-3 bg-light rounded">
+                            {{ paper.summary }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if paper.keywords %}
+                    <div class="mb-4">
+                        <h4>Keywords</h4>
+                        <div class="keywords">
+                            {% for keyword in paper.keywords.split(',') %}
+                            <span class="badge bg-primary me-2 mb-2">{{ keyword.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if paper.topics %}
+                    <div class="mb-4">
+                        <h4>Research Topics</h4>
+                        <div class="topics">
+                            {% for topic in paper.topics.split(',') %}
+                            <span class="badge bg-secondary me-2 mb-2">{{ topic.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if paper.technologies %}
+                    <div class="mb-4">
+                        <h4>Technologies</h4>
+                        <div class="technologies">
+                            {% for tech in paper.technologies.split(',') %}
+                            <span class="badge bg-info me-2 mb-2">{{ tech.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('web.papers') }}" class="btn btn-secondary">Back to Papers</a>
+        {% if paper.analysis_status == 'completed' %}
+        <a href="{{ url_for('web.view_analysis', paper_id=paper.id) }}" class="btn btn-primary">View Full Analysis</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+}
+
+.summary {
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.keywords, .topics {
+    line-height: 2;
+}
+
+.card {
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %} 

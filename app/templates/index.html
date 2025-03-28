@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Blockchain Research Assistant{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Blockchain Research Assistant</h1>
+    <p>AI-powered Blockchain Research Literature Analysis Tool</p>
+    <div class="cta-buttons">
+        <a href="{{ url_for('web.upload') }}" class="btn btn-primary">Upload Paper</a>
+        <a href="{{ url_for('web.papers') }}" class="btn btn-secondary">Browse Papers</a>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>Literature Analysis</h3>
+        <p>Automatically extract key information, generate summaries and topic analysis</p>
+    </div>
+    <div class="feature-card">
+        <h3>Smart Q&A</h3>
+        <p>Intelligent question answering based on research papers</p>
+    </div>
+    <div class="feature-card">
+        <h3>Trend Analysis</h3>
+        <p>Analyze research hotspots and development trends</p>
+    </div>
+</div>
+{% endblock %} 

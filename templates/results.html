@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Analysis Results</h2>
+    
+    {% if analysis_results %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Paper Abstracts</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ analysis_results['summary'] }}</p>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Keyphrase Extraction</h4>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for keyword in analysis_results['keywords'] %}
+                        <li>{{ keyword }}</li>
+                    {% else %}
+                        <li>No keywords extracted</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Temporal Trend Analysis</h4>
+            </div>
+            <div class="card-body">
+                <img src="{{ url_for('static', filename='outputs/trend_analysis/trend_chart.png') }}" alt="Trend Analysis Chart" class="img-fluid">
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Topic Clustering Network</h4>
+            </div>
+            <div class="card-body">
+                <img src="{{ url_for('static', filename='outputs/network_graphs/network_graph.png') }}" alt="Topic Network Graph" class="img-fluid">
+            </div>
+        </div>
+
+    {% else %}
+        <div class="alert alert-warning mt-4" role="alert">
+            No analysis results available. Please upload files and complete analysis first.
+        </div>
+    {% endif %}
+
+    <!-- 提供Back to Upload的链接 -->
+    <div class="mt-4">
+        <a href="/upload" class="btn btn-secondary">Back to Upload</a>
+    </div>
+</div>
+{% endblock %}

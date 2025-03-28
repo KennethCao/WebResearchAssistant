@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blockchain Research Assistant{% endblock %}</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="nav">
+            <a href="{{ url_for('web.index') }}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+            <a href="{{ url_for('web.upload') }}" class="{% if request.path == '/upload' %}active{% endif %}">Upload</a>
+            <a href="{{ url_for('web.papers') }}" class="{% if request.path.startswith('/papers') %}active{% endif %}">Papers</a>
+            <a href="{{ url_for('web.trends') }}" class="{% if request.path == '/trends' %}active{% endif %}">Trends</a>
+            <a href="{{ url_for('web.qa') }}" class="{% if request.path == '/qa' %}active{% endif %}">Q&A</a>
+        </nav>
+    </div>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-center">&copy; 2025 Blockchain Research Assistant</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

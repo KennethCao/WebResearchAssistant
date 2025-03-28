@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Paper Analysis - {{ paper.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('web.index') }}">Home</a></li>
+            <li class="breadcrumb-item active">Analysis</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Paper Info -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">{{ paper.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Abstract</h5>
+                    <p>{{ paper.abstract }}</p>
+                    
+                    <h5>Keywords</h5>
+                    <p>{{ paper.keywords }}</p>
+                </div>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Analysis Results</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Key Findings</h6>
+                    <p>{{ paper.key_findings }}</p>
+                    
+                    <h6>Methodology</h6>
+                    <p>{{ paper.methodology }}</p>
+                    
+                    <h6>Innovations</h6>
+                    <p>{{ paper.innovations }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Sidebar -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('web.qa') }}?paper_id={{ paper.id }}" class="btn btn-primary">
+                            <i class="fas fa-comments"></i> Ask Questions
+                        </a>
+                        <button id="refreshAnalysis" class="btn btn-outline-primary">
+                            <i class="fas fa-sync-alt"></i> Refresh Analysis
+                        </button>
+                        <a href="{{ url_for('web.download_pdf', paper_id=paper.id) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+{% endblock %} 
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 

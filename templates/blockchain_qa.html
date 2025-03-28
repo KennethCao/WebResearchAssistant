@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain Q&A{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/qa.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Blockchain Q&A System</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chat-container" id="chatMessages">
+                        <div class="message system">
+                            Welcome to Blockchain Q&A System. You can ask any questions about blockchain technology.
+                        </div>
+                    </div>
+                    
+                    <form id="questionForm" class="mt-3">
+                        <div class="input-group">
+                            <input type="text" id="questionInput" class="form-control" 
+                                   placeholder="Enter your question..." required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/qa.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Research Trends - Blockchain Research Assistant{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Research Trends</h2>
+    
+    <div class="overview-stats mb-4">
+        <div class="alert alert-info">
+            Total Analyzed Papers: {{ trend_data.total_papers if trend_data else 0 }}
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Popular Topics</h5>
+                </div>
+                <div class="card-body">
+                    {% if trend_data and trend_data.topics %}
+                        <div class="topic-cloud">
+                            {% for topic, weight in trend_data.topics.items() %}
+                                <span class="topic-tag" 
+                                      style="font-size: {{ weight }}em; margin: 0.5em;">
+                                    {{ topic }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center text-muted">No topic data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Papers</h5>
+                </div>
+                <div class="card-body">
+                    {% if trend_data and trend_data.recent_papers %}
+                        <div class="list-group">
+                            {% for paper in trend_data.recent_papers %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">
+                                            <a href="{{ url_for('web.view_paper', paper_id=paper.id) }}">
+                                                {{ paper.title }}
+                                            </a>
+                                        </h6>
+                                        <small class="text-muted">
+                                            {{ paper.uploaded_at.strftime('%Y-%m-%d') }}
+                                        </small>
+                                    </div>
+                                    {% if paper.keywords %}
+                                        <p class="mb-1">
+                                            <small class="text-muted">Keywords: {{ paper.keywords }}</small>
+                                        </p>
+                                    {% endif %}
+                                    {% if paper.summary %}
+                                        <small class="text-muted">{{ paper.summary }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center text-muted">No papers available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.topic-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1em;
+}
+
+.topic-tag {
+    background-color: #f8f9fa;
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    margin: 0.3em;
+    transition: all 0.3s ease;
+}
+
+.topic-tag:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.1);
+}
+
+.list-group-item {
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %} 

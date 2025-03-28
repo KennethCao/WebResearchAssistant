@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain Research Q&A{% endblock %}
+
+{% block head %}
+<link href="{{ url_for('static', filename='css/qa.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-comments"></i> Blockchain Research Q&A
+                    </h5>
+                    {% if paper_id %}
+                    <a href="{{ url_for('web.analysis', paper_id=paper_id) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-file-alt"></i> Back to Analysis
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <!-- Chat Messages -->
+                    <div class="chat-container mb-4" id="chatMessages">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                Hello! I'm your blockchain research assistant. How can I help you today?
+                            </div>
+                            <div class="message-time">{{ now().strftime('%H:%M') }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Question Form -->
+                    <form id="questionForm" class="input-container">
+                        <div class="input-group">
+                            <input type="text" id="questionInput" class="form-control" 
+                                   placeholder="Ask a question about blockchain research..."
+                                   required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-lightbulb"></i> Example Questions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="#" class="example-question">What are the main findings of this paper?</a></li>
+                        <li><a href="#" class="example-question">What methodology was used in the research?</a></li>
+                        <li><a href="#" class="example-question">What are the key innovations presented?</a></li>
+                        <li><a href="#" class="example-question">Can you summarize the abstract?</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/qa.js') }}"></script>
+{% endblock %} 

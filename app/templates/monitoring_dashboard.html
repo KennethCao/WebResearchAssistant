@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}系统监控看板{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link href="{{ url_for('static', filename='assets/css/monitoring.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h2 class="mt-4">实时系统监控</h2>
+    
+    <div class="row mt-4">
+        <!-- 性能指标卡片 -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-dark text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="me-3">
+                            <div class="text-small">请求吞吐量</div>
+                            <div class="h5 mb-0" id="rps-counter">0</div>
+                        </div>
+                        <i class="fas fa-tachometer-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 其他指标卡片... -->
+    </div>
+
+    <!-- ECharts 可视化区域 -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <i class="fas fa-chart-line me-1"></i>
+                    实时请求延迟分布
+                </div>
+                <div class="card-body">
+                    <div id="latency-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+<script src="{{ url_for('static', filename='assets/js/monitoring.js') }}"></script>
+{% endblock %}
+{% endblock %}

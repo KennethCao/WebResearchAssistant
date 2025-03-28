@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Trend Analysis{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Temporal Trend Analysis</h2>
+
+    {% if trend_results %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Trend Chart</h4>
+            </div>
+            <div class="card-body">
+                <img src="{{ url_for('static', filename='outputs/trend_analysis/trend_chart.png') }}" 
+                     alt="Trend Analysis Chart" class="img-fluid">
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Analysis Summary</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ trend_results['summary'] }}</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning mt-4" role="alert">
+            No trend analysis results available. Please upload files and complete analysis first.
+        </div>
+    {% endif %}
+
+    <!-- Provide Back to Upload link -->
+    <div class="mt-4">
+        <a href="/upload" class="btn btn-secondary">Back to Upload</a>
+    </div>
+</div>
+{% endblock %}

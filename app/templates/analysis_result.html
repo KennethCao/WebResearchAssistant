@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}分析结果 - 区块链研究助手{% endblock %}
+
+{% block content %}
+<div class="analysis-result">
+    <h1>文档分析结果</h1>
+    
+    {% if result %}
+        <div class="result-section">
+            <h2>分析状态</h2>
+            <p class="status-text {{ result.status }}">
+                {% if result.status == 'completed' %}
+                    ✅ 分析完成
+                {% elif result.status == 'error' %}
+                    ❌ 分析失败: {{ result.error }}
+                {% else %}
+                    ⏳ {{ result.current_task or '处理中...' }}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="result-section">
+            <h2>关键词</h2>
+            {% if result.keywords %}
+                <div class="keywords">
+                    {% for keyword in result.keywords %}
+                        <span class="keyword-tag">{{ keyword }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-data">未找到关键词</p>
+            {% endif %}
+        </div>
+        
+        <div class="result-section">
+            <h2>摘要</h2>
+            {% if result.summary %}
+                <p class="summary-text">{{ result.summary }}</p>
+            {% else %}
+                <p class="no-data">未生成摘要</p>
+            {% endif %}
+        </div>
+
+        <div class="result-section">
+            <h2>知识库状态</h2>
+            <p>文档已{% if result.added_to_kb %}成功{% else %}未{% endif %}添加到知识库</p>
+        </div>
+        
+        <div class="result-section">
+            <h2>调试信息</h2>
+            <div class="debug-info">
+                <p>分析状态: {{ result.status }}</p>
+                <p>进度: {{ result.progress }}%</p>
+                <p>当前任务: {{ result.current_task }}</p>
+                {% if result.error %}
+                    <p class="error">错误信息: {{ result.error }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('web.qa') }}" class="btn btn-primary">前往问答</a>
+            <a href="{{ url_for('web.upload') }}" class="btn btn-secondary">上传新文件</a>
+            <a href="{{ url_for('web.index') }}" class="btn btn-outline-secondary">返回首页</a>
+        </div>
+    {% else %}
+        <div class="error-message">
+            <p>未找到分析结果</p>
+            <a href="{{ url_for('web.index') }}" class="btn btn-primary">返回首页</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.analysis-result {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.result-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.status-text {
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.status-text.completed {
+    color: #198754;
+    background-color: #d1e7dd;
+}
+
+.status-text.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.keyword-tag {
+    background-color: #e9ecef;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.summary-text {
+    line-height: 1.8;
+    text-align: justify;
+    color: #212529;
+}
+
+.no-data {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.error-message {
+    text-align: center;
+    margin: 50px 0;
+    color: #dc3545;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-outline-secondary {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+
+.debug-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
+.debug-info .error {
+    color: #dc3545;
+}
+</style>
+{% endblock %} 

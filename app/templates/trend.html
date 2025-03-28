@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}趋势分析 - 区块链研究助手{% endblock %}
+
+{% block content %}
+<div class="trend-container">
+    <h1>研究趋势分析</h1>
+    
+    <div class="stats-section">
+        <h2>知识库统计</h2>
+        <p>当前知识库中共有 <span class="highlight">{{ doc_count }}</span> 篇文献</p>
+    </div>
+    
+    {% if top_keywords %}
+        <div class="keywords-section">
+            <h2>热门关键词</h2>
+            <div class="keyword-cloud">
+                {% for keyword, count in top_keywords %}
+                    <div class="keyword-item" style="font-size: {{ 14 + count * 2 }}px">
+                        {{ keyword }} ({{ count }})
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="no-data">暂无趋势数据，请先上传一些文献</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.trend-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.stats-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.highlight {
+    color: #0d6efd;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.keywords-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.keyword-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px;
+}
+
+.keyword-item {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #495057;
+    transition: all 0.3s ease;
+}
+
+.keyword-item:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: scale(1.05);
+}
+
+.no-data {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin: 50px 0;
+}
+</style>
+{% endblock %} 

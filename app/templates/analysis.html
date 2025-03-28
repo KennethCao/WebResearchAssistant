@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Results - Blockchain Research Assistant{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Paper Analysis Results</h2>
+    
+    <div id="analysis-results" class="mt-4">
+        {% if paper %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Basic Information</h5>
+                    <p><strong>Filename:</strong>{{ paper.filename }}</p>
+                    <p><strong>Upload Time:</strong>{{ paper.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Abstract</h5>
+                    <p>{{ paper.summary }}</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Keywords</h5>
+                    <div class="keyword-list">
+                        {% for keyword in paper.keywords.split(',') %}
+                            <span class="badge bg-primary me-2">{{ keyword }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Topic Distribution</h5>
+                    <div class="topic-list">
+                        {% for topic in paper.topics.split(',') %}
+                            <span class="badge bg-secondary me-2">{{ topic }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                未找到分析结果。请先上传文献进行分析。
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
