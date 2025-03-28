@@ -1,0 +1,2 @@
+sentence-transformers 2.2.2 requires torchvision, which is not installed.
+flask 2.2.3 has requirement Werkzeug>=2.2.2, but you have werkzeug 2.0.3.
